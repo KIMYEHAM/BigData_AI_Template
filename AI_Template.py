@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 
-'''
+
 # 1. Develope Tensorflow Model
 model = tf.global_variables_initializer()
 
@@ -46,8 +46,8 @@ for step in range(100001):
 saver = tf.train.Saver()
 save_path = saver.save(sess, "D:/YamP/Python/PyCharm Project/Post Capstone/venv/sources/Study/Big Data/saved.cpkt")
 print("학습된 모델을 저장했습니다.")
-'''
 
+'''
 # 2. Load Tensorflow Model
 # set placeholder same as saved model
 X = tf.placeholder(tf.float32, shape=[None, 4])
@@ -77,3 +77,4 @@ with tf.Session() as sess:
     x_data = arr[0:4]
     dict = sess.run(hypothesis, feed_dict={X: x_data})
     print(dict[0])
+'''
