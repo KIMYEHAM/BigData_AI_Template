@@ -5,6 +5,8 @@ import os
 import copy
 import scipy
 import tensorflow as tf
+
+
 # min and max value in certain column
 
 class filter:
@@ -12,20 +14,37 @@ class filter:
         self.ser = ser
 
     def filt_box_minmax(self):
-        #min = self.ser.quantile(0.25) * 0.9 #- box_len * 1.5
+        # min = self.ser.quantile(0.25) * 0.9 #- box_len * 1.5
         min_val = self.ser.mean() * 0.7
         min_val = round(min_val, 2)
-        #max = self.ser.quantile(0.75) * 1.1 #+ box_len * 1.5
+        # max = self.ser.quantile(0.75) * 1.1 #+ box_len * 1.5
         max_val = self.ser.mean() * 1.3
         max_val = round(max_val, 2)
         return min_val, max_val
 
     # Filter for extracting values from certain range
     def filt_range(self):
-        low, high  = self.filt_box_minmax()
+        low, high = self.filt_box_minmax()
         print(low, high)
         ser_filt = self.ser[(self.ser > low) & (self.ser < high)]
         return ser_filt
+
+
+def outliers_iqr(ser):
+    quartile_1 = ser.quantile(0.25)
+    quartile_3 = ser.quantile(0.75)
+    iqr = quartile_3 - quartile_1
+    lower_bound, upper_bound = (quartile_1 - (iqr * 1.5), quartile_3 + (iqr * 1.5))
+    ser_filt = ser[(ser > lower_bound) & (ser < upper_bound)]
+
+    return ser_filt
+
+
+def com_boxplot(ser1, ser2):
+    fig = plt.figure()
+    ax1 = fig.add_subplot(1, 2, 1)
+    ax2 = fig.add_subplot(1, 2, 2)
+    plt.show
 
 def applyModel(df_filt):
     predVal = []
@@ -51,14 +70,14 @@ def applyModel(df_filt):
         p3 = df_filt.df_maxTemp_filt.iloc[i]
         p4 = df_filt.df_rainFall_filt.iloc[i]
 
-        data = ((p1, p2, p3, p4), )
+        data = ((p1, p2, p3, p4),)
         arr = np.array(data, dtype=np.float32)
         x_data = arr[0:4]
 
         dict = sess.run(hypothesis, feed_dict={X: x_data})
         predVal.append(dict[0][0])
 
-        #print(p1, p2, p3, p4, dict)
+        # print(p1, p2, p3, p4, dict)
 
     predVal_ser = pd.Series(predVal)
     sess.close()

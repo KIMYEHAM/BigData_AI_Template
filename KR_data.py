@@ -30,21 +30,16 @@ avgPrice = df_init['avgPrice']
 df.head()
 
 # filt data and draw boxplot---------------------------------------
-df_avgTemp_filt = kr.filter(df['avgTemp'])
-df_avgTemp_filt = df_avgTemp_filt.filt_range()
+#df_avgTemp_filt = kr.filter(df['avgTemp'])
+#df_avgTemp_filt = df_avgTemp_filt.filt_range()
 
-df_minTemp_filt = kr.filter(df['minTemp'])
-df_minTemp_filt = df_minTemp_filt.filt_range()
+com_boxplot(df['rainFall'], df_rainFall_filt)
 
-df_maxTemp_filt = kr.filter(df['maxTemp'])
-df_maxTemp_filt = df_maxTemp_filt.filt_range()
-
-df_rainFall_filt = kr.filter(df['rainFall'])
-df_rainFall_filt = df_rainFall_filt.filt_range()
-
-df_avgPrice_filt = kr.filter(df['avgPrice'])
-df_avgPrice_filt = df_avgPrice_filt.filt_range()
-
+df_avgTemp_filt = kr.outliers_iqr(df['avgTemp'])
+df_minTemp_filt = kr.outliers_iqr(df['minTemp'])
+df_maxTemp_filt = kr.outliers_iqr(df['maxTemp'])
+df_rainFall_filt = kr.outliers_iqr(df['rainFall'])
+df_avgPrice_filt = kr.outliers_iqr(df['avgPrice'])
 # transform series to dataframe-------------------------------------
 df_filt_ser_group = [df_avgTemp_filt, df_minTemp_filt, df_maxTemp_filt, df_rainFall_filt, df_avgPrice_filt]
 
